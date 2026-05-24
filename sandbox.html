@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandbox Lab - CosmicCode</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/sandbox.css">
+  <link rel="stylesheet" href="css/lecture.css">
+</head>
+<body>
+
+  <!-- Stars Background -->
+  <div class="stars-bg" id="stars"></div>
+
+  <!-- Header Deck -->
+  <header style="height: 70px; border-bottom: 1px solid var(--border-light); background: rgba(13, 15, 34, 0.6); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 10;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <a href="dashboard.html" class="btn btn-muted" style="padding: 6px 14px; font-size: 0.85rem;">
+        ← Back to Hub
+      </a>
+      <div style="display: flex; flex-direction: column;">
+        <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-display); font-weight: 500;">SANDBOX DECK</span>
+        <span style="font-size: 1.1rem; font-weight: 600; color: #fff;">Interactive Laboratory</span>
+      </div>
+    </div>
+    
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <!-- Template Loader Dropdown -->
+      <select id="template-select" class="btn btn-muted" style="background: var(--bg-panel); font-size: 0.85rem; padding: 8px 12px; outline: none; border-color: var(--border-light);">
+        <option value="">-- Load Template --</option>
+        <option value="html_shield">HTML/CSS: Cosmic Panel Card</option>
+        <option value="js_physics">JavaScript: Variable Engine</option>
+        <option value="py_fibonacci">Python: Scanner Loop</option>
+      </select>
+      <button id="btn-sandbox-run" class="btn btn-cyan">Compile & Run</button>
+    </div>
+  </header>
+
+  <!-- Sandbox Grid Container -->
+  <main class="sandbox-container animate-fade-in">
+    
+    <!-- LEFT ZONE: Editor with tabs -->
+    <section class="sandbox-editor-deck">
+      <div class="sandbox-tabs">
+        <button id="tab-html" class="sandbox-tab active-pink" onclick="switchLanguage('htmlcss')">HTML & CSS Visuals</button>
+        <button id="tab-js" class="sandbox-tab" onclick="switchLanguage('javascript')">JavaScript Logic</button>
+        <button id="tab-py" class="sandbox-tab" onclick="switchLanguage('python')">Python Simulation</button>
+      </div>
+
+      <textarea id="sandbox-editor" class="sandbox-editor-area code-font" spellcheck="false" placeholder="// Select a tab and write coding structures here..."></textarea>
+    </section>
+
+    <!-- RIGHT ZONE: Dual visual outputs -->
+    <section class="sandbox-preview-deck">
+      
+      <!-- Frame Output Pane -->
+      <div class="sandbox-output-stage" id="preview-stage-html" style="padding: 24px; background: #13141f;">
+        <div class="pane-header" style="background:transparent; padding:0 0 10px 0; margin-bottom:10px;">Live HTML/CSS Preview</div>
+        <iframe id="sandbox-iframe" class="sandbox-live-iframe"></iframe>
+      </div>
+
+      <!-- Variable Output Pane -->
+      <div class="sandbox-output-stage" id="preview-stage-vars" style="display: none; padding: 24px; overflow-y: auto;">
+        <div class="pane-header" style="background:transparent; padding:0 0 10px 0; margin-bottom:10px;">Visual Memory Tracer</div>
+        <div id="sandbox-memory-stage" style="display: flex; align-items: center; justify-content: center; height:100%;">
+          <div style="color:var(--text-muted); text-align:center;">
+            ⚡<br>Variables declared in your script will map here in real-time.
+          </div>
+        </div>
+      </div>
+
+      <!-- Logger Output Pane -->
+      <div class="console-wrapper" style="flex: 1; border-top: 1px solid var(--border-light);">
+        <div class="pane-header" style="font-size: 0.75rem; padding: 10px 16px;">Console Debugger Logs</div>
+        <div class="console-output" id="sandbox-console-feed">
+          <div class="console-line"><span class="console-prefix">></span> Core sandbox compilers ready. Awaiting build trigger.</div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/state.js"></script>
+  <script src="js/mascot-svg.js"></script>
+  <script src="js/sandbox-engine.js"></script>
+  <script>
+    // Create stars background
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 40; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.width = Math.random() * 3 + "px";
+      star.style.height = star.style.width;
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.top = Math.random() * 100 + "vh";
+      star.style.animationDelay = Math.random() * 5 + "s";
+      starsContainer.appendChild(star);
+    }
+  </script>
+</body>
+</html>

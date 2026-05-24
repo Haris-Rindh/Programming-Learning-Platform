@@ -1,0 +1,19 @@
+{
+  "name": "cosmic-code-academy",
+  "version": "1.0.0",
+  "description": "An immersive, gamified web platform for learning programming languages through interactive, coded lectures.",
+  "scripts": {
+    "dev": "npx -y http-server -p 3000"
+  },
+  "keywords": [
+    "education",
+    "interactive",
+    "javascript",
+    "python",
+    "html",
+    "css",
+    "gamification"
+  ],
+  "author": "Antigravity Code Academy",
+  "license": "MIT"
+}

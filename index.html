@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CosmicCode - Interactive Programming Academy</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    .hero-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
+      justify-content: center;
+    }
+
+    .mascot-holder {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .mascot-holder::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 12px;
+      background: radial-gradient(ellipse, rgba(0, 240, 255, 0.4) 0%, transparent 70%);
+      filter: blur(4px);
+      animation: shadowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes shadowPulse {
+      0%, 100% { opacity: 0.6; width: 120px; }
+      50% { opacity: 0.2; width: 150px; }
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .cta-deck {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      width: 100%;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      padding: 30px;
+      text-align: left;
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.5rem; }
+      .cta-deck { flex-direction: column; width: 100%; max-width: 300px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Twinkling space background particles -->
+  <div class="stars-bg" id="stars"></div>
+
+  <div class="hero-container animate-fade-in">
+    
+    <!-- Floating interactive Robot Mascot -->
+    <div class="mascot-holder" id="hero-mascot"></div>
+
+    <h1 class="hero-title">Warp Into Coding, Interactive-Style</h1>
+    <p class="hero-subtitle">
+      Step into CosmicCode, a high-fidelity learning playground where code drives animations, memory visuals update live, and your robot guide leads the flight.
+    </p>
+
+    <div class="cta-deck">
+      <a href="dashboard.html" class="btn btn-cyan">Enter Flight Deck</a>
+      <a href="sandbox.html" class="btn btn-muted">Enter Sandbox Laboratory</a>
+    </div>
+
+    <!-- Features Deck -->
+    <div class="feature-grid">
+      <div class="panel feature-card">
+        <div class="feature-icon text-cyan">🤖</div>
+        <h3>Interactive Coded Lectures</h3>
+        <p>No video feeds here! Watch code write itself live in the editor while Byte explains concepts inside visual panels.</p>
+      </div>
+
+      <div class="panel feature-card">
+        <div class="feature-icon text-green">🧬</div>
+        <h3>Memory Trace Mapping</h3>
+        <p>Watch how memory boxes construct, arrays index, and function calls trigger as you click and run code line by line.</p>
+      </div>
+
+      <div class="panel feature-card">
+        <div class="feature-icon text-pink">🕹️</div>
+        <h3>Visual Code Sandbox</h3>
+        <p>Safely run JS codes, inspect variable lists, or style visual UI reactor parts inside an absolute-preview sandbox.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/mascot-svg.js"></script>
+  <script>
+    // Inject mascot SVG
+    Mascot.render("hero-mascot", "idle");
+
+    // Twinkle interactive background stars
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 45; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.width = Math.random() * 3 + "px";
+      star.style.height = star.style.width;
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.top = Math.random() * 100 + "vh";
+      star.style.animationDelay = Math.random() * 5 + "s";
+      starsContainer.appendChild(star);
+    }
+
+    // Interactive mascot mouseover mood shifting
+    const mascotEl = document.getElementById("hero-mascot");
+    mascotEl.addEventListener("mouseenter", () => {
+      Mascot.setMood("hero-mascot", "happy");
+    });
+    mascotEl.addEventListener("mouseleave", () => {
+      Mascot.setMood("hero-mascot", "idle");
+    });
+  </script>
+</body>
+</html>

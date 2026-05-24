@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academy Dashboard - CosmicCode</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- Background Deck Stars -->
+  <div class="stars-bg" id="stars"></div>
+
+  <!-- Header Deck -->
+  <header style="padding: 20px 24px; border-bottom: 1px solid var(--border-light); background: rgba(13, 15, 34, 0.5); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center;">
+    <a href="index.html" style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+      <span class="text-cyan">🌌</span> CosmicCode
+    </a>
+    <div style="display: flex; gap: 12px;">
+      <a href="sandbox.html" class="btn btn-muted btn-small" style="padding: 6px 14px; font-size: 0.85rem;">Sandbox Lab</a>
+      <button onclick="confirmReset()" class="btn btn-muted btn-small" style="padding: 6px 14px; font-size: 0.85rem; border-color: rgba(255, 0, 127, 0.2); color: var(--accent-pink);">Reset Core</button>
+    </div>
+  </header>
+
+  <!-- Core Dashboard Grid -->
+  <main class="dashboard-deck animate-fade-in">
+    
+    <!-- LEFT PORT: Modules & Profile -->
+    <div>
+      
+      <!-- Command Profile -->
+      <section class="panel profile-card">
+        <div class="profile-header">
+          <div class="profile-avatar" id="prof-avatar">🚀</div>
+          <div class="profile-title">
+            <h2 id="prof-name">Cadet Explorer</h2>
+            <p id="prof-level">Rank 1: Initiate Voyager</p>
+          </div>
+        </div>
+
+        <div class="xp-container">
+          <div class="xp-header">
+            <span>Core Experience (XP)</span>
+            <span id="xp-text">0 / 250 XP</span>
+          </div>
+          <div class="xp-bar-bg">
+            <div class="xp-bar-fill" id="xp-fill"></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-val id-color" id="stat-streak" style="color: var(--accent-cyan);">1</div>
+            <div class="stat-label">Daily Streak</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val" id="stat-xp" style="color: var(--accent-pink);">0</div>
+            <div class="stat-label">Total Earned</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Language Pathways -->
+      <section class="tracks-section" id="tracks-deck"></section>
+
+    </div>
+
+    <!-- RIGHT PORT: Mascot & Badges -->
+    <div>
+      
+      <!-- Companion Guide -->
+      <section class="panel companion-card">
+        <div class="bubble-dialogue" id="mascot-bubble">
+          Loading system directives...
+        </div>
+        <div id="dashboard-mascot" style="position: relative; margin-top: 10px;"></div>
+        <h3 style="font-size: 1rem; color: #fff;">Byte</h3>
+        <p style="font-size: 0.75rem; color: var(--text-secondary);">Academy Companion Node</p>
+      </section>
+
+      <!-- Badge Vault -->
+      <section class="panel badge-vault">
+        <h3>Badge Vault</h3>
+        <div class="badge-grid" id="badges-grid"></div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/state.js"></script>
+  <script src="js/lectures-data.js"></script>
+  <script src="js/mascot-svg.js"></script>
+  <script>
+    // Create stars background
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 40; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.width = Math.random() * 3 + "px";
+      star.style.height = star.style.width;
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.top = Math.random() * 100 + "vh";
+      star.style.animationDelay = Math.random() * 5 + "s";
+      starsContainer.appendChild(star);
+    }
+
+    // Refresh UI with State
+    function refreshDashboard() {
+      const data = State.data;
+
+      // Update Profile Stats
+      document.getElementById("prof-name").textContent = `Explorer Rank ${data.level}`;
+      document.getElementById("prof-level").textContent = data.level > 3 ? "Master Space Operator" : "Initiate Space Voyager";
+      document.getElementById("stat-streak").textContent = `${data.streak} 🔥`;
+      
+      const xpNeeded = State.getXPNeededForLevel(data.level);
+      document.getElementById("stat-xp").textContent = data.xp + (data.level - 1) * 250; // simple sum
+      document.getElementById("xp-text").textContent = `${data.xp} / ${xpNeeded} XP`;
+      
+      const xpPct = (data.xp / xpNeeded) * 100;
+      document.getElementById("xp-fill").style.width = `${xpPct}%`;
+
+      // Render Badge Vault
+      const badgeGrid = document.getElementById("badges-grid");
+      badgeGrid.innerHTML = "";
+      Object.keys(BADGES_CONFIG).forEach(badgeId => {
+        const config = BADGES_CONFIG[badgeId];
+        const isUnlocked = data.badges.includes(badgeId);
+        
+        const badgeItem = document.createElement("div");
+        badgeItem.className = `badge-item ${isUnlocked ? 'unlocked' : ''}`;
+        if (isUnlocked) {
+          badgeItem.style.borderColor = `var(--accent-${config.color})`;
+          badgeItem.style.boxShadow = `0 0 15px rgba(var(--accent-${config.color}-rgb), 0.15)`;
+        }
+        badgeItem.innerHTML = `
+          ${config.icon}
+          <div class="badge-tooltip">
+            <h4 style="color: var(--accent-${config.color});">${config.name}</h4>
+            <p>${config.desc}</p>
+            <p style="margin-top: 6px; font-weight: bold; font-size: 0.7rem; color: ${isUnlocked ? 'var(--accent-green)' : 'var(--text-muted)'};">
+              ${isUnlocked ? '✓ UNLOCKED' : 'LOCKED'}
+            </p>
+          </div>
+        `;
+        badgeGrid.appendChild(badgeItem);
+      });
+
+      // Render Tracks List
+      const tracksDeck = document.getElementById("tracks-deck");
+      tracksDeck.innerHTML = "";
+      
+      Object.keys(LECTURES_DATA).forEach(trackId => {
+        const track = LECTURES_DATA[trackId];
+        
+        // Calculate completion progress
+        const lessonsKeys = Object.keys(track.lessons);
+        const completedCount = lessonsKeys.filter(id => data.completedLessons[trackId][id]).length;
+        const progressPct = Math.round((completedCount / lessonsKeys.length) * 100);
+
+        const card = document.createElement("div");
+        card.className = "panel track-card";
+        card.style.borderColor = `rgba(var(--accent-${track.color}-rgb), 0.15)`;
+        
+        let checklistHTML = "";
+        lessonsKeys.forEach(lessonId => {
+          const lesson = track.lessons[lessonId];
+          const isDone = data.completedLessons[trackId][lessonId];
+          checklistHTML += `
+            <div class="lesson-row ${isDone ? 'completed' : ''}">
+              <div class="lesson-label">
+                <div class="lesson-checkbox"></div>
+                <span class="lesson-title-text" style="font-weight: 500;">${lesson.title}</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">(${lesson.difficulty})</span>
+              </div>
+              <a href="lecture.html?track=${trackId}&lesson=${lessonId}" class="btn btn-small btn-${track.color}" style="padding: 4px 12px; font-size: 0.8rem; border-radius: 6px;">
+                ${isDone ? 'Replay' : 'Launch'}
+              </a>
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="track-header">
+            <div class="track-info">
+              <div class="track-icon" style="color: var(--accent-${track.color}); text-shadow: 0 0 15px rgba(var(--accent-${track.color}-rgb), 0.3); border-color: rgba(var(--accent-${track.color}-rgb), 0.25);">
+                ${track.icon}
+              </div>
+              <div class="track-title">
+                <h3>${track.title}</h3>
+                <div class="track-meta">
+                  <span class="badge-ui badge-${track.color}">${progressPct}% Transformed</span>
+                  <span class="badge-ui" style="color: var(--accent-gold); border-color: rgba(var(--accent-gold-rgb), 0.25);">${completedCount * 100} XP Potential</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lesson-checklist">
+            ${checklistHTML}
+          </div>
+        `;
+        tracksDeck.appendChild(card);
+      });
+
+      // Update Byte Mascot speech contextually
+      const bubble = document.getElementById("mascot-bubble");
+      const doneJS = Object.keys(LECTURES_DATA.javascript.lessons).every(id => data.completedLessons.javascript[id]);
+      const doneTotal = Object.keys(data.completedLessons).reduce((sum, key) => sum + Object.keys(data.completedLessons[key]).length, 0);
+
+      if (doneTotal === 0) {
+        bubble.textContent = "Welcome explorer! I'm Byte, your core pilot companion. We should initiate the JS Warp Core modules first. Select 'Cosmic Variables' to learn variables!";
+        Mascot.setMood("dashboard-mascot", "idle");
+      } else if (!doneJS) {
+        bubble.textContent = "You're off to a soaring start! Let's power through the remaining JavaScript tracks to forge deflector shields!";
+        Mascot.setMood("dashboard-mascot", "explaining");
+      } else if (data.badges.length < 5) {
+        bubble.textContent = "Fantastic operations! The JS engine is humming beautifully. Have you tried Python Lists? Let's check out 'Serpent Variables' next!";
+        Mascot.setMood("dashboard-mascot", "happy");
+      } else {
+        bubble.textContent = "Spectacular, Commander! You've mastered all language pipelines in the database. Enter the Sandbox Laboratory to assemble free projects!";
+        Mascot.setMood("dashboard-mascot", "happy");
+      }
+    }
+
+    // Initialize UI
+    Mascot.render("dashboard-mascot", "idle");
+    refreshDashboard();
+
+    // Listen to changes (e.g. if badge is unlocked via script or another window)
+    window.addEventListener("cosmicStateUpdate", refreshDashboard);
+
+    function confirmReset() {
+      if (confirm("Warning: Resetting will clear all your earned XP, levels, and badges in this session. Proceed?")) {
+        State.resetProgress();
+        refreshDashboard();
+      }
+    }
+  </script>
+</body>
+</html>

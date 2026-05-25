@@ -34,6 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const visualizerStage = document.getElementById("visualizer-stage");
   const visualizerHeader = document.getElementById("visualizer-header");
   const visualizerPlaceholder = document.getElementById("visualizer-placeholder");
+  const tabVisualizer = document.getElementById("tab-visualizer");
+  const tabAiMentor = document.getElementById("tab-ai-mentor");
+  const aiStage = document.getElementById("ai-stage");
 
   const btnBack = document.getElementById("btn-back");
   const btnNext = document.getElementById("btn-next");
@@ -114,6 +117,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // Reset timers
     if (typingTimer) clearInterval(typingTimer);
     if (codeTypingTimer) clearInterval(codeTypingTimer);
+
+    // Reset AI stage
+    if (aiStage) {
+      aiStage.innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 40px 0;">
+          🤖<br>AI code review is generated when you Run & Verify your solutions.
+        </div>
+      `;
+    }
+    if (tabVisualizer) {
+      tabVisualizer.click();
+    }
 
     // Get step configurations
     const step = steps[currentStepIndex];
@@ -582,6 +597,16 @@ document.addEventListener("DOMContentLoaded", () => {
     logConsole("✓ Verification successful! Checkpoint cleared.", "success");
     Mascot.setMood("lecture-mascot", "happy");
     
+    // Generate Claude API prompt-matching JSON feedback payload
+    const feedback = AIFeedbackEngine.generateFeedback(editor.value, lessonId, trackId, true);
+    const chart = AIFeedbackEngine.generateAsciiChart(feedback.complexity.currentTime);
+    
+    // Render
+    aiStage.innerHTML = AIFeedbackEngine.renderFeedbackHTML(feedback, chart);
+    
+    // Show AI review immediately
+    tabAiMentor.click();
+    
     // Hide verify button, show normal Next flow button
     btnVerify.style.display = "none";
     btnRunManual.style.display = "none";
@@ -592,6 +617,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function failedCheckpoint(errMsg) {
     logConsole(errMsg, "error");
     Mascot.setMood("lecture-mascot", "thinking");
+    
+    // Generate Socratic bug detection review (Prompt 3)
+    const feedback = AIFeedbackEngine.generateFeedback(editor.value, lessonId, trackId, false);
+    aiStage.innerHTML = AIFeedbackEngine.renderFeedbackHTML(feedback);
+    
+    // Show Socratic debugging clues
+    tabAiMentor.click();
   }
 
   // Handle Lesson Finished Transition
@@ -613,6 +645,25 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "dashboard.html";
     }, 4500);
   }
+
+  // AI MENTOR TABS BINDINGS
+  tabVisualizer.addEventListener("click", () => {
+    tabVisualizer.style.color = "var(--accent-cyan)";
+    tabVisualizer.style.borderBottom = "2px solid var(--accent-cyan)";
+    tabAiMentor.style.color = "var(--text-secondary)";
+    tabAiMentor.style.borderBottom = "none";
+    visualizerStage.style.display = "flex";
+    aiStage.style.display = "none";
+  });
+
+  tabAiMentor.addEventListener("click", () => {
+    tabAiMentor.style.color = "var(--accent-pink)";
+    tabAiMentor.style.borderBottom = "2px solid var(--accent-pink)";
+    tabVisualizer.style.color = "var(--text-secondary)";
+    tabVisualizer.style.borderBottom = "none";
+    aiStage.style.display = "block";
+    visualizerStage.style.display = "none";
+  });
 
   // BUTTON INTERACTIVE LISTENERS
   btnBack.addEventListener("click", () => {

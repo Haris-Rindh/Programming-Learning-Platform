@@ -81,15 +81,26 @@
       </div>
     </section>
 
-    <!-- PANE 3: Memory Tracer Visualizer -->
+    <!-- PANE 3: Memory Tracer Visualizer / AI Mentor Tabs -->
     <section class="pane tracer-pane">
-      <div class="pane-header" id="visualizer-header">Visual Memory Tracer</div>
-      <div class="pane-content" style="display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 50%, rgba(13, 15, 34, 0.4) 0%, transparent 80%);">
+      <div class="pane-header" id="visualizer-header" style="display:flex; gap:16px; justify-content:flex-start; text-transform:none; letter-spacing:0; align-items:center;">
+        <span id="tab-visualizer" style="cursor:pointer; color:var(--accent-cyan); font-weight:600; border-bottom:2px solid var(--accent-cyan); padding-bottom:4px;">Visual Tracer</span>
+        <span id="tab-ai-mentor" style="cursor:pointer; color:var(--text-secondary); font-weight:500; padding-bottom:4px; display:inline-flex; align-items:center; gap:4px;">AI Mentor <span style="font-size:0.65rem; background:var(--accent-pink); color:#fff; padding:1px 4px; border-radius:4px; font-weight:bold;">PRO</span></span>
+      </div>
+      <div class="pane-content" style="display: flex; flex-direction: column; background: radial-gradient(circle at 50% 50%, rgba(13, 15, 34, 0.4) 0%, transparent 80%); overflow-y:auto; justify-content:flex-start; height:100%;">
         
-        <div class="tracer-window" id="visualizer-stage">
+        <!-- Tab 1: Visual Tracer Stage -->
+        <div class="tracer-window" id="visualizer-stage" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; min-height:300px;">
           <!-- Dynamically populated visual cells -->
           <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;" id="visualizer-placeholder">
             🚀<br>Memory blocks will map here when code is active.
+          </div>
+        </div>
+
+        <!-- Tab 2: AI Mentor Stage -->
+        <div id="ai-stage" style="display:none; width:100%; padding-bottom:20px;">
+          <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 40px 0;">
+            🤖<br>AI code review is generated when you Run & Verify your solutions.
           </div>
         </div>
 
@@ -102,6 +113,7 @@
   <script src="js/state.js"></script>
   <script src="js/lectures-data.js"></script>
   <script src="js/mascot-svg.js"></script>
+  <script src="js/ai-feedback.js"></script>
   <script src="js/lecture-player.js"></script>
   <script>
     // Create stars background

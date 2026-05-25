@@ -17,7 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabPY = document.getElementById("tab-py");
   
   const btnRun = document.getElementById("btn-sandbox-run");
+  const btnAI = document.getElementById("btn-sandbox-ai");
   const templateSelect = document.getElementById("template-select");
+  const stageAI = document.getElementById("preview-stage-ai");
+  const aiStage = document.getElementById("sandbox-ai-stage");
 
   // Template Database
   const TEMPLATES = {
@@ -175,6 +178,7 @@ for count in range(3):
     // Clear stages
     stageHTML.style.display = "none";
     stageVars.style.display = "none";
+    stageAI.style.display = "none";
 
     clearConsole();
 
@@ -412,6 +416,23 @@ for count in range(3):
   });
 
   btnRun.addEventListener("click", compileSandbox);
+
+  btnAI.addEventListener("click", () => {
+    // Hide standard previews, reveal AI feedback pane!
+    stageHTML.style.display = "none";
+    stageVars.style.display = "none";
+    stageAI.style.display = "block";
+
+    logConsole("Running static AI review compile analysis...", "success");
+
+    // Generate feedback payload matching Prompt 1 & Prompt 2 complexity rules
+    const code = editor.value;
+    const feedback = AIFeedbackEngine.generateFeedback(code, "sandbox-lab", currentLang, true);
+    const chart = AIFeedbackEngine.generateAsciiChart(feedback.complexity.currentTime);
+
+    aiStage.innerHTML = AIFeedbackEngine.renderFeedbackHTML(feedback, chart);
+    logConsole("AI Analysis review completed successfully.");
+  });
 
   // Initialize
   switchLanguage("htmlcss");

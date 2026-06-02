@@ -23,46 +23,153 @@
     </div>
   </header>
 
+  <!-- Role Tabs Selector -->
+  <div class="panel" style="max-width: 1200px; margin: 20px auto 0 auto; display: flex; gap: 10px; background: rgba(13, 15, 34, 0.4); border-radius: 12px; padding: 6px; border: 1px solid var(--border-light); backdrop-filter: blur(10px);">
+    <button id="role-learner" class="btn btn-cyan btn-small" onclick="switchRole('learner')" style="flex: 1; border-radius: 8px; font-size: 0.8rem; padding: 6px 12px;">Learner Deck</button>
+    <button id="role-instructor" class="btn btn-muted btn-small" onclick="switchRole('instructor')" style="flex: 1; border-radius: 8px; font-size: 0.8rem; padding: 6px 12px;">Instructor Portal</button>
+    <button id="role-enterprise" class="btn btn-muted btn-small" onclick="switchRole('enterprise')" style="flex: 1; border-radius: 8px; font-size: 0.8rem; padding: 6px 12px;">Enterprise Admin</button>
+  </div>
+
   <!-- Core Dashboard Grid -->
-  <main class="dashboard-deck animate-fade-in">
+  <main class="dashboard-deck animate-fade-in" style="margin-top: 20px;">
     
     <!-- LEFT PORT: Modules & Profile -->
     <div>
       
-      <!-- Command Profile -->
-      <section class="panel profile-card">
-        <div class="profile-header">
-          <div class="profile-avatar" id="prof-avatar">🚀</div>
-          <div class="profile-title">
-            <h2 id="prof-name">Cadet Explorer</h2>
-            <p id="prof-level">Rank 1: Initiate Voyager</p>
+      <!-- 1. LEARNER DECK -->
+      <div id="deck-learner">
+        <!-- Command Profile -->
+        <section class="panel profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" id="prof-avatar">🚀</div>
+            <div class="profile-title">
+              <h2 id="prof-name">Cadet Explorer</h2>
+              <p id="prof-level">Rank 1: Initiate Voyager</p>
+            </div>
           </div>
-        </div>
 
-        <div class="xp-container">
-          <div class="xp-header">
-            <span>Core Experience (XP)</span>
-            <span id="xp-text">0 / 250 XP</span>
+          <div class="xp-container">
+            <div class="xp-header">
+              <span>Core Experience (XP)</span>
+              <span id="xp-text">0 / 250 XP</span>
+            </div>
+            <div class="xp-bar-bg">
+              <div class="xp-bar-fill" id="xp-fill"></div>
+            </div>
           </div>
-          <div class="xp-bar-bg">
-            <div class="xp-bar-fill" id="xp-fill"></div>
-          </div>
-        </div>
 
-        <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-val id-color" id="stat-streak" style="color: var(--accent-cyan);">1</div>
-            <div class="stat-label">Daily Streak</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-val id-color" id="stat-streak" style="color: var(--accent-cyan);">1</div>
+              <div class="stat-label">Daily Streak</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-val" id="stat-xp" style="color: var(--accent-pink);">0</div>
+              <div class="stat-label">Total Earned</div>
+            </div>
           </div>
-          <div class="stat-item">
-            <div class="stat-val" id="stat-xp" style="color: var(--accent-pink);">0</div>
-            <div class="stat-label">Total Earned</div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- Language Pathways -->
-      <section class="tracks-section" id="tracks-deck"></section>
+        <!-- Language Pathways -->
+        <section class="tracks-section" id="tracks-deck"></section>
+      </div>
+
+      <!-- 2. INSTRUCTOR DECK -->
+      <div id="deck-instructor" style="display: none; flex-direction: column; gap: 24px;">
+        <section class="panel profile-card" style="padding: 24px;">
+          <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px;">Classroom Metrics</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-val" style="color: var(--accent-green);">14</div>
+              <div class="stat-label">Active Students</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-val" style="color: var(--accent-cyan);">68%</div>
+              <div class="stat-label">Average Progress</div>
+            </div>
+          </div>
+          <div style="margin-top: 14px;">
+            <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:6px;">Average Syllabus Failure Risk: <span style="color: var(--accent-green); font-weight:bold;">LOW (8%)</span></div>
+            <div class="timer-track" style="height:6px;"><div class="timer-bar" style="width:8%; background:var(--accent-green); box-shadow:0 0 10px var(--accent-green);"></div></div>
+          </div>
+        </section>
+
+        <!-- Student Alerts Table -->
+        <section class="panel track-card" style="padding: 24px;">
+          <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 14px;">Classroom Roster & Alerts</h3>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.85rem; text-align:left;">
+              <thead>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.06); color:var(--text-secondary);">
+                  <th style="padding:10px;">Student Name</th>
+                  <th style="padding:10px;">Progress</th>
+                  <th style="padding:10px;">Streak</th>
+                  <th style="padding:10px;">Status</th>
+                </tr>
+              </thead>
+              <tbody style="color:#fff;">
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                  <td style="padding:10px; font-weight:500;">Elena Rostova</td>
+                  <td style="padding:10px; color:var(--accent-green);">90% (JS Mastered)</td>
+                  <td style="padding:10px;">12 days 🔥</td>
+                  <td style="padding:10px;"><span class="badge-ui badge-green">Safe</span></td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                  <td style="padding:10px; font-weight:500;">Jack Miller</td>
+                  <td style="padding:10px; color:var(--accent-gold);">45% (Python Loops)</td>
+                  <td style="padding:10px;">3 days 🔥</td>
+                  <td style="padding:10px;"><span class="badge-ui" style="color:var(--accent-gold); border-color:rgba(255,215,0,0.2);">Attention</span></td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                  <td style="padding:10px; font-weight:500;">Sophia Vance</td>
+                  <td style="padding:10px; color:var(--accent-pink);">10% (JS Variables)</td>
+                  <td style="padding:10px;">0 days 💤</td>
+                  <td style="padding:10px;"><span class="badge-ui badge-pink">Risk Alert (40%)</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- 3. ENTERPRISE DECK -->
+      <div id="deck-enterprise" style="display: none; flex-direction: column; gap: 24px;">
+        <section class="panel profile-card" style="padding: 24px;">
+          <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px;">Engineering Training Deck</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-val" style="color: var(--accent-pink);">45</div>
+              <div class="stat-label">Devs Enrolled</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-val" style="color: var(--accent-cyan);">3.2x</div>
+              <div class="stat-label">Velocity Speedup</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Skill Gap heatmap -->
+        <section class="panel track-card" style="padding: 24px;">
+          <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 14px;">Interactive Skill-Gap Matrix</h3>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; font-size:0.8rem; text-align:center;">
+            <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border:1px solid var(--border-light);">
+              <div style="color:var(--text-muted); margin-bottom:6px;">Front-End Squad</div>
+              <div style="font-size:0.95rem; font-weight:bold; color:var(--accent-cyan);">JS: ADVANCED</div>
+              <div style="font-size:0.7rem; color:var(--accent-green); margin-top:4px;">✓ No Gaps</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border:1px solid var(--border-light);">
+              <div style="color:var(--text-muted); margin-bottom:6px;">Data Science Squad</div>
+              <div style="font-size:0.95rem; font-weight:bold; color:var(--accent-green);">PY: EXPERT</div>
+              <div style="font-size:0.7rem; color:var(--accent-green); margin-top:4px;">✓ No Gaps</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border:1px solid rgba(255, 0, 127, 0.15); box-shadow:0 0 10px rgba(255,0,127,0.05);">
+              <div style="color:var(--text-muted); margin-bottom:6px;">Infrastructure Squad</div>
+              <div style="font-size:0.95rem; font-weight:bold; color:var(--accent-pink);">PY: INITIATE</div>
+              <div style="font-size:0.7rem; color:var(--accent-pink); margin-top:4px;">Gap: Loops (Critical)</div>
+            </div>
+          </div>
+        </section>
+      </div>
 
     </div>
 
@@ -74,8 +181,19 @@
         <div class="bubble-dialogue" id="mascot-bubble">
           Loading system directives...
         </div>
+
+        <!-- Interactive AI Quiz button overlay -->
+        <div id="quiz-btn-deck" style="display: none; flex-direction: column; gap: 8px; width: 100%; margin-top: 10px; animation: fadeIn 0.3s ease-out;">
+          <button id="quiz-opt-0" class="btn btn-muted btn-small" style="font-size: 0.8rem; text-align: left; padding: 8px 12px; font-weight: 500;"></button>
+          <button id="quiz-opt-1" class="btn btn-muted btn-small" style="font-size: 0.8rem; text-align: left; padding: 8px 12px; font-weight: 500;"></button>
+          <button id="quiz-opt-2" class="btn btn-muted btn-small" style="font-size: 0.8rem; text-align: left; padding: 8px 12px; font-weight: 500;"></button>
+        </div>
+
         <div id="dashboard-mascot" style="position: relative; margin-top: 10px;"></div>
-        <h3 style="font-size: 1rem; color: #fff;">Byte</h3>
+        
+        <button id="btn-mascot-quiz" class="btn btn-muted btn-small" style="width: 100%; margin-top: 12px; border-color: rgba(0, 240, 255, 0.2); color: var(--accent-cyan);">Launch Socratic Quiz</button>
+        
+        <h3 style="font-size: 1rem; color: #fff; margin-top:8px;">Byte</h3>
         <p style="font-size: 0.75rem; color: var(--text-secondary);">Academy Companion Node</p>
       </section>
 
@@ -153,6 +271,29 @@
       const tracksDeck = document.getElementById("tracks-deck");
       tracksDeck.innerHTML = "";
       
+      // Render dynamic Bug Hunting Arena minigame Card at top
+      const bugCard = document.createElement("div");
+      bugCard.className = "panel track-card";
+      bugCard.style.borderColor = "rgba(255, 0, 127, 0.2)";
+      bugCard.innerHTML = `
+        <div class="track-header">
+          <div class="track-info">
+            <div class="track-icon" style="color: var(--accent-pink); text-shadow: 0 0 15px rgba(255,0,127,0.3); border-color: rgba(255,0,127,0.25);">
+              👾
+            </div>
+            <div class="track-title">
+              <h3>Bug Hunting Arena</h3>
+              <div class="track-meta">
+                <span class="badge-ui badge-pink">Minigame Active</span>
+                <span class="badge-ui" style="color: var(--accent-gold); border-color: rgba(255,215,0,0.25);">Earn +50 XP / Zap</span>
+              </div>
+            </div>
+          </div>
+          <a href="bughunt.html" class="btn btn-pink" style="padding: 6px 16px; font-size: 0.85rem;">Enter Arena</a>
+        </div>
+      `;
+      tracksDeck.appendChild(bugCard);
+
       Object.keys(LECTURES_DATA).forEach(trackId => {
         const track = LECTURES_DATA[trackId];
         
@@ -205,23 +346,189 @@
         tracksDeck.appendChild(card);
       });
 
-      // Update Byte Mascot speech contextually
-      const bubble = document.getElementById("mascot-bubble");
-      const doneJS = Object.keys(LECTURES_DATA.javascript.lessons).every(id => data.completedLessons.javascript[id]);
-      const doneTotal = Object.keys(data.completedLessons).reduce((sum, key) => sum + Object.keys(data.completedLessons[key]).length, 0);
+      // Update Byte Mascot speech contextually (if not inside quiz mode)
+      if (!quizActive) {
+        const bubble = document.getElementById("mascot-bubble");
+        const doneJS = Object.keys(LECTURES_DATA.javascript.lessons).every(id => data.completedLessons.javascript[id]);
+        const doneTotal = Object.keys(data.completedLessons).reduce((sum, key) => sum + Object.keys(data.completedLessons[key]).length, 0);
 
-      if (doneTotal === 0) {
-        bubble.textContent = "Welcome explorer! I'm Byte, your core pilot companion. We should initiate the JS Warp Core modules first. Select 'Cosmic Variables' to learn variables!";
-        Mascot.setMood("dashboard-mascot", "idle");
-      } else if (!doneJS) {
-        bubble.textContent = "You're off to a soaring start! Let's power through the remaining JavaScript tracks to forge deflector shields!";
+        if (doneTotal === 0) {
+          bubble.textContent = "Welcome explorer! I'm Byte, your core pilot companion. We should initiate the JS Warp Core modules first. Select 'Cosmic Variables' to learn variables!";
+          Mascot.setMood("dashboard-mascot", "idle");
+        } else if (!doneJS) {
+          bubble.textContent = "You're off to a soaring start! Let's power through the remaining JavaScript tracks to forge deflector shields!";
+          Mascot.setMood("dashboard-mascot", "explaining");
+        } else if (data.badges.length < 5) {
+          bubble.textContent = "Fantastic operations! The JS engine is humming beautifully. Have you tried Python Lists? Let's check out 'Serpent Variables' next!";
+          Mascot.setMood("dashboard-mascot", "happy");
+        } else {
+          bubble.textContent = "Spectacular, Commander! You've mastered all language pipelines in the database. Enter the Sandbox Laboratory to assemble free projects!";
+          Mascot.setMood("dashboard-mascot", "happy");
+        }
+      }
+    }
+
+    // ROLE SWITCHING ENGINE
+    window.switchRole = function(role) {
+      const deckLearner = document.getElementById("deck-learner");
+      const deckInstructor = document.getElementById("deck-instructor");
+      const deckEnterprise = document.getElementById("deck-enterprise");
+      
+      const btnLearner = document.getElementById("role-learner");
+      const btnInstructor = document.getElementById("role-instructor");
+      const btnEnterprise = document.getElementById("role-enterprise");
+
+      // Reset styles
+      btnLearner.className = "btn btn-muted btn-small";
+      btnInstructor.className = "btn btn-muted btn-small";
+      btnEnterprise.className = "btn btn-muted btn-small";
+      
+      deckLearner.style.display = "none";
+      deckInstructor.style.display = "none";
+      deckEnterprise.style.display = "none";
+
+      if (role === "learner") {
+        btnLearner.className = "btn btn-cyan btn-small";
+        deckLearner.style.display = "block";
+        if (quizActive) {
+          // keep quiz bubble
+        } else {
+          document.getElementById("mascot-bubble").textContent = "Welcome back to the Learner Deck! Choose a sector path to resume flight.";
+        }
+      } else if (role === "instructor") {
+        btnInstructor.className = "btn btn-green btn-small";
+        deckInstructor.style.display = "flex";
+        document.getElementById("mascot-bubble").textContent = "Accessing Instructor Gradebook modules. Syllabus failure risks and active student progress charts are synced nominal.";
         Mascot.setMood("dashboard-mascot", "explaining");
-      } else if (data.badges.length < 5) {
-        bubble.textContent = "Fantastic operations! The JS engine is humming beautifully. Have you tried Python Lists? Let's check out 'Serpent Variables' next!";
-        Mascot.setMood("dashboard-mascot", "happy");
+      } else if (role === "enterprise") {
+        btnEnterprise.className = "btn btn-pink btn-small";
+        deckEnterprise.style.display = "flex";
+        document.getElementById("mascot-bubble").textContent = "Enterprise Admin logs loaded. Engineering team skill gap heatmap matrix compiled and complete.";
+        Mascot.setMood("dashboard-mascot", "thinking");
+      }
+    };
+
+    // SOCRATIC AI QUIZ MODE ENGINE
+    const QUIZ_QUESTIONS = [
+      {
+        q: "If you want to prevent a variable from being re-assigned in JavaScript, which declaration keyword should you use?",
+        choices: ["let", "var", "const"],
+        correctIdx: 2,
+        socraticClues: [
+          "Let allows variable updates later (like changing speed levels). Try checking others!",
+          "Var is function-scoped and allows complete re-assignment. Think about constant values!",
+          "✓ Phenomeal! 'const' defines constant references that prevent subsequent re-assignment!"
+        ]
+      },
+      {
+        q: "Python uses indentation to define code blocks. How many spaces are standard in Python style guidelines (PEP 8)?",
+        choices: ["2 spaces", "4 spaces", "8 spaces"],
+        correctIdx: 1,
+        socraticClues: [
+          "2 spaces is common in HTML/CSS, but Python guidelines request a slightly larger width.",
+          "✓ Magnificent! '4 spaces' is the PEP 8 standard to format nested loops and functions!",
+          "8 spaces is too wide and pushes code lines off the terminal screen too quickly."
+        ]
+      },
+      {
+        q: "Which CSS display property allows aligning core reactor visual core items centered both vertically and horizontally easily?",
+        choices: ["display: block", "display: inline", "display: flex"],
+        correctIdx: 2,
+        socraticClues: [
+          "Block displays stack vertically but do not center children automatically. Try another layout!",
+          "Inline displays flow like text words, offering very limited dimensional alignment.",
+          "✓ Outstanding! 'display: flex' combined with justify-content: center and align-items: center fits perfectly!"
+        ]
+      }
+    ];
+
+    let quizActive = false;
+    let quizIdx = 0;
+
+    const btnQuiz = document.getElementById("btn-mascot-quiz");
+    const quizDeck = document.getElementById("quiz-btn-deck");
+    const bubble = document.getElementById("mascot-bubble");
+
+    btnQuiz.addEventListener("click", () => {
+      if (!quizActive) {
+        // Start Quiz
+        quizActive = true;
+        quizIdx = 0;
+        btnQuiz.textContent = "Exit Socratic Quiz";
+        btnQuiz.style.color = "var(--accent-pink)";
+        btnQuiz.style.borderColor = "rgba(255,0,127,0.2)";
+        loadQuizQuestion();
       } else {
-        bubble.textContent = "Spectacular, Commander! You've mastered all language pipelines in the database. Enter the Sandbox Laboratory to assemble free projects!";
+        // Exit Quiz
+        quizActive = false;
+        btnQuiz.textContent = "Launch Socratic Quiz";
+        btnQuiz.style.color = "var(--accent-cyan)";
+        btnQuiz.style.borderColor = "rgba(0, 240, 255, 0.2)";
+        quizDeck.style.display = "none";
+        refreshDashboard();
+      }
+    });
+
+    function loadQuizQuestion() {
+      if (quizIdx >= QUIZ_QUESTIONS.length) {
+        // Quiz completed!
+        quizActive = false;
+        quizDeck.style.display = "none";
+        btnQuiz.textContent = "Launch Socratic Quiz";
+        btnQuiz.style.color = "var(--accent-cyan)";
+        btnQuiz.style.borderColor = "rgba(0, 240, 255, 0.2)";
+        
+        State.addXP(50); // Bonus Quiz XP!
+        bubble.innerHTML = `<span style="color:var(--accent-green); font-weight:bold;">🏆 QUIZ COMPLETED!</span><br>You answered every Socratic challenge correctly! Unlocked +50 Bonus XP!`;
         Mascot.setMood("dashboard-mascot", "happy");
+        return;
+      }
+
+      const item = QUIZ_QUESTIONS[quizIdx];
+      bubble.textContent = `Socratic Question ${quizIdx + 1}: ${item.q}`;
+      Mascot.setMood("dashboard-mascot", "explaining");
+
+      quizDeck.style.display = "flex";
+      
+      // Populate choices
+      for (let i = 0; i < 3; i++) {
+        const btnOpt = document.getElementById(`quiz-opt-${i}`);
+        btnOpt.textContent = item.choices[i];
+        
+        // Reset styles
+        btnOpt.className = "btn btn-muted btn-small";
+        btnOpt.disabled = false;
+        
+        // Rebind click
+        btnOpt.onclick = () => handleQuizChoice(i, btnOpt);
+      }
+    }
+
+    function handleQuizChoice(choiceIdx, element) {
+      const item = QUIZ_QUESTIONS[quizIdx];
+      
+      if (choiceIdx === item.correctIdx) {
+        // Correct answer!
+        element.className = "btn btn-green btn-small";
+        bubble.textContent = item.socraticClues[choiceIdx];
+        Mascot.setMood("dashboard-mascot", "happy");
+        
+        State.addXP(20); // Persistent XP!
+        
+        // Disable choices
+        for (let i = 0; i < 3; i++) {
+          document.getElementById(`quiz-opt-${i}`).disabled = true;
+        }
+
+        setTimeout(() => {
+          quizIdx++;
+          loadQuizQuestion();
+        }, 3500);
+      } else {
+        // Wrong answer: Socratic feedback!
+        element.className = "btn btn-pink btn-small";
+        bubble.textContent = item.socraticClues[choiceIdx];
+        Mascot.setMood("dashboard-mascot", "thinking");
       }
     }
 

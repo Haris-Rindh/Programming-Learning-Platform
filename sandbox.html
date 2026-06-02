@@ -49,7 +49,33 @@
         <button id="tab-py" class="sandbox-tab" onclick="switchLanguage('python')">Python Simulation</button>
       </div>
 
+      <!-- Mode Selector Tab -->
+      <div style="background: #0a0c16; padding: 8px 20px; border-bottom: 1px solid var(--border-light); display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-display); font-weight:bold;">WORKSPACE CORE</span>
+        <div style="display:flex; gap:6px;">
+          <button id="btn-mode-code" class="btn btn-muted btn-small active-cyan" onclick="switchEditorMode('code')" style="font-size:0.7rem; padding:3px 10px; border-radius:6px; border-color:var(--accent-cyan); color:var(--accent-cyan);">Code Editor</button>
+          <button id="btn-mode-blocks" class="btn btn-muted btn-small" onclick="switchEditorMode('blocks')" style="font-size:0.7rem; padding:3px 10px; border-radius:6px; border-color:rgba(255,255,255,0.06); color:var(--text-secondary);">Visual Blocks</button>
+        </div>
+      </div>
+
+      <!-- Text Editor Textarea -->
       <textarea id="sandbox-editor" class="sandbox-editor-area code-font" spellcheck="false" placeholder="// Select a tab and write coding structures here..."></textarea>
+
+      <!-- Snapping Blocks Stage -->
+      <div id="sandbox-blocks-stage" style="display: none; flex-direction: column; gap: 16px; padding: 20px; background: #070915; flex: 1; overflow-y: auto;">
+        <h4 style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing:0.05em; border-bottom: 1px solid var(--border-light); padding-bottom:8px; margin-bottom:4px;">Available Blocks (Click to snap)</h4>
+        
+        <!-- Snapping grid selector -->
+        <div id="block-inventory" style="display:flex; flex-direction:column; gap:12px;"></div>
+        
+        <h4 style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing:0.05em; border-bottom: 1px solid var(--border-light); padding-bottom:8px; margin:20px 0 4px 0; display:flex; justify-content:space-between; align-items:center;">
+          <span>Active Assembly Code</span>
+          <button onclick="clearBlockAssembly()" class="btn btn-muted btn-small" style="font-size:0.65rem; padding:2px 8px; border-color:rgba(255,0,127,0.15); color:var(--accent-pink);">Reset Blocks</button>
+        </h4>
+        <div id="block-assembly-timeline" style="display:flex; flex-direction:column; gap:8px; padding:12px; background:rgba(0,0,0,0.2); border:1px dashed rgba(255,255,255,0.08); border-radius:10px; min-height:80px; color:var(--text-muted); font-size:0.85rem;">
+          No active blocks snapped. Click blocks above to build logic lines!
+        </div>
+      </div>
     </section>
 
     <!-- RIGHT ZONE: Dual visual outputs -->

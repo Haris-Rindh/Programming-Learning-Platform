@@ -403,6 +403,172 @@ for count in range(3):
     }
   }
 
+  // VISUAL SNAPPING BLOCKS CONFIGURATION
+  const BLOCKS_CONFIG = {
+    javascript: [
+      { id: "js_var", label: "let speed = 150;", code: "let speed = 150;\n", desc: "Declares variable 'speed' in memory" },
+      { id: "js_add", label: "speed = speed + 50;", code: "speed = speed + 50;\n", desc: "Increases speed cell value" },
+      { id: "js_log", label: "console.log(speed);", code: "console.log(speed);\n", desc: "Prints speed results to terminal" }
+    ],
+    python: [
+      { id: "py_list", label: "cargo = ['fuel']", code: "cargo = ['fuel']\n", desc: "Creates cargo list with fuel slot" },
+      { id: "py_add", label: "cargo.append('shields')", code: "cargo.append('shields')\n", desc: "Appends shields to checklist" },
+      { id: "py_print", label: "print(cargo)", code: "print(cargo)\n", desc: "Outputs list contents to screen" }
+    ],
+    htmlcss: [
+      { id: "html_reactor", label: "<div class='reactor'>", code: "<div class=\"reactor\">\n", desc: "Adds container shell" },
+      { id: "html_core", label: "  <div class='core'></div>", code: "  <div class=\"core\"></div>\n", desc: "Nests core element" },
+      { id: "html_close", label: "</div>", code: "</div>\n", desc: "Closes container tag" },
+      { id: "css_core", label: ".core { background: #ff007f; }", code: "<style>\n  body { background:#070915; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }\n  .reactor { width:120px; height:120px; border:2px dashed #00f0ff; display:flex; justify-content:center; align-items:center; border-radius:12px; }\n  .core {\n    width: 50px;\n    height: 50px;\n    border-radius: 50%;\n    background-color: #ff007f;\n    box-shadow: 0 0 25px #ff007f;\n  }\n</style>\n", desc: "Styles reactor elements center-aligned" }
+    ]
+  };
+
+  let activeBlocks = [];
+  let currentWorkspaceMode = "code"; // "code" or "blocks"
+
+  // Switch Workspace modes (Textarea Editor vs Snapping Blocks)
+  window.switchEditorMode = function(mode) {
+    currentWorkspaceMode = mode;
+    
+    const btnCode = document.getElementById("btn-mode-code");
+    const btnBlocks = document.getElementById("btn-mode-blocks");
+    
+    const editorArea = document.getElementById("sandbox-editor");
+    const blocksStage = document.getElementById("sandbox-blocks-stage");
+
+    btnCode.className = "btn btn-muted btn-small";
+    btnBlocks.className = "btn btn-muted btn-small";
+
+    editorArea.style.display = "none";
+    blocksStage.style.display = "none";
+
+    if (mode === "code") {
+      btnCode.className = "btn btn-muted btn-small active-cyan";
+      btnCode.style.borderColor = "var(--accent-cyan)";
+      btnCode.style.color = "var(--accent-cyan)";
+      
+      btnBlocks.style.borderColor = "rgba(255,255,255,0.06)";
+      btnBlocks.style.color = "var(--text-secondary)";
+      
+      editorArea.style.display = "block";
+      
+      // Load blocks code to editor if we had snapped blocks
+      if (activeBlocks.length > 0) {
+        editorArea.value = activeBlocks.map(b => b.code).join("");
+      }
+    } else {
+      btnBlocks.className = "btn btn-muted btn-small active-cyan";
+      btnBlocks.style.borderColor = "var(--accent-cyan)";
+      btnBlocks.style.color = "var(--accent-cyan)";
+      
+      btnCode.style.borderColor = "rgba(255,255,255,0.06)";
+      btnCode.style.color = "var(--text-secondary)";
+      
+      blocksStage.style.display = "flex";
+      renderBlocksInventory();
+    }
+  };
+
+  // Render Snapping Blocks list depending on active language
+  function renderBlocksInventory() {
+    const inv = document.getElementById("block-inventory");
+    inv.innerHTML = "";
+    
+    const blocks = BLOCKS_CONFIG[currentLang] || [];
+    
+    blocks.forEach(block => {
+      const card = document.createElement("div");
+      card.className = "panel track-card";
+      card.style.cssText = "padding:12px 18px; cursor:pointer; border-radius:10px; flex-direction:row; justify-content:space-between; align-items:center; gap:10px;";
+      
+      let borderGlow = "rgba(0, 240, 255, 0.15)";
+      let textColor = "var(--accent-cyan)";
+      if (currentLang === "htmlcss") {
+        borderGlow = "rgba(255, 0, 127, 0.15)";
+        textColor = "var(--accent-pink)";
+      } else if (currentLang === "python") {
+        borderGlow = "rgba(57, 255, 20, 0.15)";
+        textColor = "var(--accent-green)";
+      }
+
+      card.style.borderColor = borderGlow;
+      card.innerHTML = `
+        <div>
+          <div style="font-family:var(--font-mono); font-size:0.9rem; font-weight:bold; color:${textColor};">${block.label}</div>
+          <div style="font-size:0.7rem; color:var(--text-secondary); margin-top:2px;">${block.desc}</div>
+        </div>
+        <span style="font-size:1.25rem;">⇲</span>
+      `;
+
+      card.addEventListener("click", () => snapBlock(block));
+      inv.appendChild(card);
+    });
+  }
+
+  // Snap a block into assembly list
+  function snapBlock(block) {
+    activeBlocks.push(block);
+    
+    // Synthesize code
+    const compiledCode = activeBlocks.map(b => b.code).join("");
+    editor.value = compiledCode;
+
+    // Compile preview automatically
+    compileSandbox();
+
+    // Render timeline
+    renderTimeline();
+  }
+
+  function renderTimeline() {
+    const timeline = document.getElementById("block-assembly-timeline");
+    timeline.innerHTML = "";
+    
+    if (activeBlocks.length === 0) {
+      timeline.textContent = "No active blocks snapped. Click blocks above to build logic lines!";
+      timeline.style.color = "var(--text-muted)";
+      return;
+    }
+
+    activeBlocks.forEach((block, idx) => {
+      const el = document.createElement("div");
+      el.style.cssText = "background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:0.85rem; color:#fff; animation:slideBox 0.2s ease-out;";
+      el.innerHTML = `
+        <span><strong style="color:var(--text-muted); margin-right:8px;">${idx + 1}.</strong> ${block.label}</span>
+        <span style="color:var(--accent-pink); cursor:pointer; font-weight:bold;" onclick="removeSnappedBlock(${idx}, event)">✕</span>
+      `;
+      timeline.appendChild(el);
+    });
+  }
+
+  window.removeSnappedBlock = function(idx, event) {
+    if (event) event.stopPropagation();
+    activeBlocks.splice(idx, 1);
+    
+    const compiledCode = activeBlocks.map(b => b.code).join("");
+    editor.value = compiledCode;
+    compileSandbox();
+    renderTimeline();
+  };
+
+  window.clearBlockAssembly = function() {
+    activeBlocks = [];
+    editor.value = "";
+    compileSandbox();
+    renderTimeline();
+  };
+
+  // Switch tabs reset
+  const oldSwitch = window.switchLanguage;
+  window.switchLanguage = function(lang) {
+    activeBlocks = [];
+    oldSwitch(lang);
+    if (currentWorkspaceMode === "blocks") {
+      renderBlocksInventory();
+      renderTimeline();
+    }
+  };
+
   // Load Preset Templates dynamically
   templateSelect.addEventListener("change", (e) => {
     const val = e.target.value;
@@ -413,6 +579,7 @@ for count in range(3):
     } else if (val === "py_fibonacci") {
       switchLanguage("python");
     }
+    switchEditorMode("code"); // force code editor view on templates
   });
 
   btnRun.addEventListener("click", compileSandbox);
